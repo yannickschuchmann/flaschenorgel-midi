@@ -10,13 +10,18 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
-
+#include "FlaschenorgelItem.h"
 
 //==============================================================================
 FlaschenorgelAudioProcessor::FlaschenorgelAudioProcessor()
 {
     stateChanged = true;
     startTimer(5000);
+    
+    items[0].setPressure(350);
+    items[1].setPressure(650);
+    items[2].setPressure(700);
+    
 }
 
 FlaschenorgelAudioProcessor::~FlaschenorgelAudioProcessor()
@@ -106,10 +111,7 @@ void FlaschenorgelAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
         sendNote(pressureToNote(700), 2, midiMessages);
         sendNote(pressureToNote(950), 3, midiMessages);
          */
-        int notes[3];
-        notes[0] = pressureToNote(350);
-        notes[1] = pressureToNote(750);
-        notes[2] = pressureToNote(920);
+        int notes[3] = {items[0].getNoteNumber(),items[1].getNoteNumber(),items[2].getNoteNumber()};
         
         sendNote(getAverageNoteNumber(notes, 3), 1, midiMessages);
         stateChanged = false;
@@ -166,19 +168,6 @@ void FlaschenorgelAudioProcessor::sendNote (int noteNumber, int channel, MidiBuf
     std::cout << noteNumber;
     std::cout << MidiMessage::getMidiNoteName(msg.getNoteNumber(), true, true, 1);
     std::cout << "\n";
-}
-
-int FlaschenorgelAudioProcessor::pressureToNote(int pressure)
-{
-    int noteNumber = 0;
-    int deltaNoteNumber;
-    int deltaPressure = pressure - TARA; // mute on "tara"
-    if (deltaPressure > 0) {
-        deltaNoteNumber = round((deltaPressure - DELTARANGE) / (DELTARANGE / NOTENUMBERRANGE));
-        std::cout << deltaNoteNumber;
-        noteNumber = NOTENUMBERCENTER + deltaNoteNumber;
-    }
-    return noteNumber;
 }
 
 void FlaschenorgelAudioProcessor::timerCallback()

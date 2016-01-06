@@ -13,7 +13,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
-
+#include "FlaschenorgelItem.h"
 
 //==============================================================================
 /**
@@ -28,11 +28,14 @@ public:
     void paint (Graphics&) override;
     void resized() override;
 
+    void setupSlider(FlaschenorgelItem item);
 private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     FlaschenorgelAudioProcessor& processor;
 
+    Slider sliders[3];
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FlaschenorgelAudioProcessorEditor)
 };
 

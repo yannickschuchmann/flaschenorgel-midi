@@ -10,6 +10,7 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "FlaschenorgelItem.h"
 
 
 //==============================================================================
@@ -19,6 +20,11 @@ FlaschenorgelAudioProcessorEditor::FlaschenorgelAudioProcessorEditor (Flaschenor
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
     setSize (400, 300);
+    
+    for (int i = 0; i < 3; i++) {
+
+    }
+
 }
 
 FlaschenorgelAudioProcessorEditor::~FlaschenorgelAudioProcessorEditor()
@@ -33,6 +39,11 @@ void FlaschenorgelAudioProcessorEditor::paint (Graphics& g)
     g.setColour (Colours::black);
     g.setFont (15.0f);
     g.drawFittedText ("Flaschenorgel", getLocalBounds(), Justification::centred, 1);
+}
+
+void FlaschenorgelAudioProcessorEditor::setupSlider(FlaschenorgelItem item)
+{
+    
 }
 
 void FlaschenorgelAudioProcessorEditor::resized()

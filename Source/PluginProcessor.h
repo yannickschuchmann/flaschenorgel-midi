@@ -12,6 +12,7 @@
 #define PLUGINPROCESSOR_H_INCLUDED
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "FlaschenorgelItem.h"
 
 
 //==============================================================================
@@ -30,7 +31,6 @@ public:
 
     void processBlock (AudioSampleBuffer&, MidiBuffer&) override;
     void sendNote (int noteNumber, int channel, MidiBuffer&);
-    int pressureToNote (int pressure);
     int getAverageNoteNumber (int notes[], int notesLength);
     
     //==============================================================================
@@ -59,10 +59,7 @@ public:
     bool stateChanged;
     int lastNoteNumbersForChannel[3];
     
-    const int TARA = 300;
-    const int DELTARANGE = 700 / 2;
-    const int NOTENUMBERCENTER = 62;
-    const int NOTENUMBERRANGE = 26;
+    FlaschenorgelItem items[3];
     
 private:
     //==============================================================================
