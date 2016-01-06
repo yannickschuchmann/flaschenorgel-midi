@@ -15,39 +15,58 @@
 
 //==============================================================================
 FlaschenorgelAudioProcessorEditor::FlaschenorgelAudioProcessorEditor (FlaschenorgelAudioProcessor& p)
-    : AudioProcessorEditor (&p), processor (p)
+: AudioProcessorEditor (&p), processor (p)
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize (400, 300);
+    setSize (390, 300);
     
+    getLookAndFeel().setColour(Slider::backgroundColourId, Colour(0xffe9ea98));
+    getLookAndFeel().setColour(Slider::thumbColourId, Colour(0xff85d0f4));
+    getLookAndFeel().setColour(Slider::trackColourId, Colour(0xff85d0f4));
+    getLookAndFeel().setColour(Slider::textBoxOutlineColourId, Colour(0x00000000));
+
     for (int i = 0; i < 3; i++) {
-
+        setupSlider(i, p.items[i]);
     }
-
 }
 
 FlaschenorgelAudioProcessorEditor::~FlaschenorgelAudioProcessorEditor()
 {
 }
 
+
 //==============================================================================
 void FlaschenorgelAudioProcessorEditor::paint (Graphics& g)
 {
-    g.fillAll (Colours::white);
-
+    g.fillAll (Colour(0xffec6868));
     g.setColour (Colours::black);
-    g.setFont (15.0f);
-    g.drawFittedText ("Flaschenorgel", getLocalBounds(), Justification::centred, 1);
+    
 }
 
-void FlaschenorgelAudioProcessorEditor::setupSlider(FlaschenorgelItem item)
+void FlaschenorgelAudioProcessorEditor::setupSlider(int sliderIndex, FlaschenorgelItem item)
 {
     
+    
+    sliders[sliderIndex].setSliderStyle (Slider::LinearBarVertical);
+    sliders[sliderIndex].setRange(0.0, 1000.0, 1.0);
+    sliders[sliderIndex].setTextBoxStyle (Slider::TextEntryBoxPosition::TextBoxBelow, true, 90, 30);
+    sliders[sliderIndex].setPopupDisplayEnabled (false, this);
+    sliders[sliderIndex].setValue(item.getPressure() - FlaschenorgelItem::TARA);
+    sliders[sliderIndex].setSliderSnapsToMousePosition(false);
+    sliders[sliderIndex].setScrollWheelEnabled(false);
+    
+    // this function adds the slider to the editor
+    addAndMakeVisible (&sliders[sliderIndex]);
 }
 
 void FlaschenorgelAudioProcessorEditor::resized()
 {
-    // This is generally where you'll want to lay out the positions of any
-    // subcomponents in your editor..
+
+    sliders[0].setBounds (30, 30, 90, getHeight() - 60);
+    sliders[1].setBounds (150, 30, 90, getHeight() - 60);
+    sliders[2].setBounds (270, 30, 90, getHeight() - 60);
+
 }
+
+

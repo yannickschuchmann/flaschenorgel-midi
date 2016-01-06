@@ -23,7 +23,7 @@ public:
     int getPressure();
     void setPressure(int pressure);
     
-    const int TARA = 300;
+    const static int TARA = 300;
     const int DELTARANGE = 700 / 2;
     const int NOTENUMBERCENTER = 62;
     const int NOTENUMBERRANGE = 26;
