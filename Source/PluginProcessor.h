@@ -30,6 +30,9 @@ public:
 
     void processBlock (AudioSampleBuffer&, MidiBuffer&) override;
     void sendNote (int noteNumber, int channel, MidiBuffer&);
+    int pressureToNote (int pressure);
+    int getAverageNoteNumber (int notes[], int notesLength);
+    
     //==============================================================================
     AudioProcessorEditor* createEditor() override;
     bool hasEditor() const override;
@@ -54,6 +57,12 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
     bool stateChanged;
+    int lastNoteNumbersForChannel[3];
+    
+    const int TARA = 300;
+    const int DELTARANGE = 700 / 2;
+    const int NOTENUMBERCENTER = 62;
+    const int NOTENUMBERRANGE = 26;
     
 private:
     //==============================================================================

@@ -100,25 +100,85 @@ void FlaschenorgelAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
     }
     
     if (stateChanged) {
-        sendNote(80, 1, midiMessages);
-        sendNote(75, 2, midiMessages);
-        sendNote(85, 3, midiMessages);
+        /* doesn't play multiple notes.. just the last one
+         * for now we have to do a sad workaround and play just the average note ;(
+        sendNote(pressureToNote(350), 1, midiMessages);
+        sendNote(pressureToNote(700), 2, midiMessages);
+        sendNote(pressureToNote(950), 3, midiMessages);
+         */
+        int notes[3];
+        notes[0] = pressureToNote(350);
+        notes[1] = pressureToNote(750);
+        notes[2] = pressureToNote(920);
+        
+        sendNote(getAverageNoteNumber(notes, 3), 1, midiMessages);
         stateChanged = false;
     }
 }
+
+int FlaschenorgelAudioProcessor::getAverageNoteNumber(int notes[], int notesLength)
+{
+    // notesLength parameter is just for keep it simple.
+    // For more info take a look at sizeof of arrays passed to functions and becoming pointer
+    int noteNumber;
+    int noteSum = 0;
+    int validNotes = 0;
+    for (int i = 0; i < notesLength; i++) {
+        if (notes[i] > 0) { // if valid note
+            validNotes++;
+            noteSum += notes[i];
+        }
+    }
+    
+    if (validNotes > 0) {
+        noteNumber = noteSum / validNotes;
+    } else {
+        noteNumber = 0;
+    }
+    
+    return noteNumber;
+}
+
 void FlaschenorgelAudioProcessor::sendNote (int noteNumber, int channel, MidiBuffer& midiMessages)
 {
     MidiMessage msg;
     uint8 vel = 127;
+
+    int lastNoteNumber = lastNoteNumbersForChannel[channel - 1];
+    
+    if (noteNumber == 0) {
+        if (lastNoteNumber > 0) {
+            msg = MidiMessage::noteOff(channel, lastNoteNumber, vel);
+            midiMessages.addEvent(msg, midiMessages.getLastEventTime());
+        }
+        
+        return;
+    }
 
     msg = MidiMessage::noteOff(channel, noteNumber, vel);
     midiMessages.addEvent(msg, midiMessages.getLastEventTime());
     
     msg = MidiMessage::noteOn(channel, noteNumber, vel);
     midiMessages.addEvent(msg, midiMessages.getLastEventTime());
+
+    lastNoteNumbersForChannel[channel - 1] = noteNumber;
+    
+    std::cout << noteNumber;
     std::cout << MidiMessage::getMidiNoteName(msg.getNoteNumber(), true, true, 1);
-    
-    
+    std::cout << "\n";
+}
+
+int FlaschenorgelAudioProcessor::pressureToNote(int pressure)
+{
+    int noteNumber = 0;
+    int deltaNoteNumber;
+    int deltaPressure = pressure - TARA; // mute on "tara"
+    if (deltaPressure > 0) {
+        deltaNoteNumber = round((deltaPressure - DELTARANGE) / (DELTARANGE / NOTENUMBERRANGE));
+        std::cout << deltaNoteNumber;
+        noteNumber = NOTENUMBERCENTER + deltaNoteNumber;
+    }
+    return noteNumber;
 }
 
 void FlaschenorgelAudioProcessor::timerCallback()
