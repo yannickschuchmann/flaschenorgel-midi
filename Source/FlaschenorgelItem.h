@@ -1,5 +1,5 @@
 //
-//  FlaschenorgelItem.hpp
+//  FlaschenorgelItem.h
 //  Flaschenorgel
 //
 //  Created by Yannick Schuchmann on 06.01.16.
