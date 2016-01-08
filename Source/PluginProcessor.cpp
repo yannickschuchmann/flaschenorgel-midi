@@ -11,6 +11,8 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 #include "FlaschenorgelItem.h"
+#include "CommunicationHandler.h"
+#include <sstream>
 
 //==============================================================================
 FlaschenorgelAudioProcessor::FlaschenorgelAudioProcessor()
@@ -19,8 +21,8 @@ FlaschenorgelAudioProcessor::FlaschenorgelAudioProcessor()
     startTimer(5000);
     
     items[0].setPressure(350);
-    items[1].setPressure(650);
-    items[2].setPressure(700);
+    items[1].setPressure(400);
+    items[2].setPressure(450);
     
 }
 
@@ -173,6 +175,27 @@ void FlaschenorgelAudioProcessor::sendNote (int noteNumber, int channel, MidiBuf
 void FlaschenorgelAudioProcessor::timerCallback()
 {
     stateChanged = true;
+    
+    
+    std::string str = handler.read();
+    std::vector<int> vect;
+    
+    std::stringstream ss(str);
+    
+    int i;
+    while (ss >> i)
+    {
+        vect.push_back(i);
+        
+        if (ss.peek() == '|')
+            ss.ignore();
+    }
+    std::cout << vect[0];
+    std::cout << vect[1];
+    std::cout << vect[2];
+    items[0].setPressure(vect[0]);
+    items[1].setPressure(vect[1]);
+    items[2].setPressure(vect[2]);
 }
 
 //==============================================================================

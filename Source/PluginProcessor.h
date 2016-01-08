@@ -13,6 +13,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "FlaschenorgelItem.h"
+#include "CommunicationHandler.h"
 
 
 //==============================================================================
@@ -59,6 +60,7 @@ public:
     bool stateChanged;
     int lastNoteNumbersForChannel[3];
     
+    CommunicationHandler handler;
     FlaschenorgelItem items[3];
     
 private:

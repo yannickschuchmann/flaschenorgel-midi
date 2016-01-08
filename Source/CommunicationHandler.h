@@ -11,13 +11,16 @@
 
 #include <stdio.h>
 
+#include <iostream>
+
 class CommunicationHandler
 {
 public:
     CommunicationHandler ();
     ~CommunicationHandler();
     
-    
+    void readSerial();
+    std::string read();
     //==============================================================================
     
 private:
