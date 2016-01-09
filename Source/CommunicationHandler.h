@@ -10,8 +10,9 @@
 #define CommunicationHandler_h
 
 #include <stdio.h>
-
 #include <iostream>
+
+#include "../JuceLibraryCode/JuceHeader.h"
 
 class CommunicationHandler
 {
@@ -20,7 +21,10 @@ public:
     ~CommunicationHandler();
     
     void readSerial();
-    std::string read();
+    std::vector<int> read();
+    
+    std::vector<int> parse(std::string valueStr);
+    
     //==============================================================================
     
 private:

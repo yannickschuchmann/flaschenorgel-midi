@@ -18,7 +18,7 @@
 FlaschenorgelAudioProcessor::FlaschenorgelAudioProcessor()
 {
     stateChanged = true;
-    startTimer(5000);
+    startTimer(100);
     
     items[0].setPressure(350);
     items[1].setPressure(400);
@@ -123,7 +123,7 @@ void FlaschenorgelAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
 
 int FlaschenorgelAudioProcessor::getAverageNoteNumber(int notes[], int notesLength)
 {
-    // notesLength parameter is just for keep it simple.
+    // notesLength parameter exists only for keeping it simple.
     // For more info take a look at sizeof of arrays passed to functions and becoming pointer
     int noteNumber;
     int noteSum = 0;
@@ -177,21 +177,11 @@ void FlaschenorgelAudioProcessor::timerCallback()
 {
     stateChanged = true;
     
-    std::string str = handler.read();
-    std::vector<int> vect;
-    std::stringstream ss(str);
+    std::vector<int> values = handler.read();
     
-    int i;
-    while (ss >> i)
-    {
-        vect.push_back(i);
-        
-        if (ss.peek() == '|')
-            ss.ignore();
-    }
-    items[0].setPressure(vect[0]);
-    items[1].setPressure(vect[1]);
-    items[2].setPressure(vect[2]);
+    items[0].setPressure(values[0]);
+    items[1].setPressure(values[1]);
+    items[2].setPressure(values[2]);
     
     FlaschenorgelAudioProcessorEditor* editor = dynamic_cast<FlaschenorgelAudioProcessorEditor*>(getActiveEditor());
     

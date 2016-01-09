@@ -10,6 +10,8 @@
 
 #include "SerialStream.h"
 #include <iostream>
+#include <fstream>
+#include <sstream>
 
 using namespace std;
 
@@ -29,7 +31,7 @@ CommunicationHandler::~CommunicationHandler ()
  * Reads arduino values from txt file which keeps updated by
  * Ruby script which is doing the part that seems too tricky for c++
  */
-string CommunicationHandler::read()
+std::vector<int> CommunicationHandler::read()
 {
     
     ifstream myReadFile;
@@ -42,7 +44,26 @@ string CommunicationHandler::read()
         }
     }
     myReadFile.close();
-    return output;
+    
+    
+    return parse(output);
+}
+
+std::vector<int> CommunicationHandler::parse(std::string valueStr)
+{
+    std::vector<int> vect;
+    std::stringstream ss(valueStr);
+    
+    int i;
+    while (ss >> i)
+    {
+        vect.push_back(i);
+        
+        if (ss.peek() == '|')
+            ss.ignore();
+    }
+    
+    return vect;
 }
 
 void CommunicationHandler::readSerial()
