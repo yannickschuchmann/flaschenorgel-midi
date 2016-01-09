@@ -62,6 +62,9 @@ public:
     
     CommunicationHandler handler;
     FlaschenorgelItem items[3];
+    std::vector<int> oldValues;
+    
+    const int MINFORCHANGE = 20;
     
 private:
     //==============================================================================

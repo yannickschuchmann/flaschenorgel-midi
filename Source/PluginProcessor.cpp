@@ -175,20 +175,29 @@ void FlaschenorgelAudioProcessor::sendNote (int noteNumber, int channel, MidiBuf
 
 void FlaschenorgelAudioProcessor::timerCallback()
 {
-    stateChanged = true;
-    
     std::vector<int> values = handler.read();
     
-    items[0].setPressure(values[0]);
-    items[1].setPressure(values[1]);
-    items[2].setPressure(values[2]);
+    for (int i = 0; i < 3; i++) {
+        if (oldValues.size() == 0 || std::abs(oldValues[i] - values[i]) >= MINFORCHANGE) {
+            items[i].setPressure(values[i]);
+            stateChanged = true;
+        }
+    }
     
+    if (stateChanged) {
+        oldValues = values;
+    }
+    
+    /* 
+     * update GUI
+     * getActiveEditor() returns nullptr if no editor window is opened.
+     */
     FlaschenorgelAudioProcessorEditor* editor = dynamic_cast<FlaschenorgelAudioProcessorEditor*>(getActiveEditor());
-    
-    
     if (editor) {
         editor->updateGUI(items);
     }
+    
+    
 }
 
 //==============================================================================
