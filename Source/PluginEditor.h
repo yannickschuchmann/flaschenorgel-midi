@@ -28,7 +28,9 @@ public:
     void paint (Graphics&) override;
     void resized() override;
     
+    void updateGUI(FlaschenorgelItem items[]);
     
+    void setupSliders(FlaschenorgelItem items[]);
     void setupSlider(int sliderIndex, FlaschenorgelItem item);
 private:
     // This reference is provided as a quick way for your editor to

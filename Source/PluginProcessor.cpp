@@ -28,6 +28,7 @@ FlaschenorgelAudioProcessor::FlaschenorgelAudioProcessor()
 
 FlaschenorgelAudioProcessor::~FlaschenorgelAudioProcessor()
 {
+    stopTimer();
 }
 
 //==============================================================================
@@ -176,10 +177,8 @@ void FlaschenorgelAudioProcessor::timerCallback()
 {
     stateChanged = true;
     
-    
     std::string str = handler.read();
     std::vector<int> vect;
-    
     std::stringstream ss(str);
     
     int i;
@@ -190,12 +189,16 @@ void FlaschenorgelAudioProcessor::timerCallback()
         if (ss.peek() == '|')
             ss.ignore();
     }
-    std::cout << vect[0];
-    std::cout << vect[1];
-    std::cout << vect[2];
     items[0].setPressure(vect[0]);
     items[1].setPressure(vect[1]);
     items[2].setPressure(vect[2]);
+    
+    FlaschenorgelAudioProcessorEditor* editor = dynamic_cast<FlaschenorgelAudioProcessorEditor*>(getActiveEditor());
+    
+    
+    if (editor) {
+        editor->updateGUI(items);
+    }
 }
 
 //==============================================================================

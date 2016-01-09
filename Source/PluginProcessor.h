@@ -15,7 +15,6 @@
 #include "FlaschenorgelItem.h"
 #include "CommunicationHandler.h"
 
-
 //==============================================================================
 /**
 */
@@ -38,6 +37,7 @@ public:
     AudioProcessorEditor* createEditor() override;
     bool hasEditor() const override;
 
+    
     //==============================================================================
     const String getName() const override;
 

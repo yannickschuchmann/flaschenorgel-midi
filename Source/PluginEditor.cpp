@@ -26,9 +26,7 @@ FlaschenorgelAudioProcessorEditor::FlaschenorgelAudioProcessorEditor (Flaschenor
     getLookAndFeel().setColour(Slider::trackColourId, Colour(0xff85d0f4));
     getLookAndFeel().setColour(Slider::textBoxOutlineColourId, Colour(0x00000000));
 
-    for (int i = 0; i < 3; i++) {
-        setupSlider(i, p.items[i]);
-    }
+    setupSliders(p.items);
 }
 
 FlaschenorgelAudioProcessorEditor::~FlaschenorgelAudioProcessorEditor()
@@ -44,12 +42,24 @@ void FlaschenorgelAudioProcessorEditor::paint (Graphics& g)
     
 }
 
+void FlaschenorgelAudioProcessorEditor::updateGUI(FlaschenorgelItem items[])
+{
+    setupSliders(items);
+    repaint();
+}
+
+void FlaschenorgelAudioProcessorEditor::setupSliders(FlaschenorgelItem items[]) {
+    for (int i = 0; i < 3; i++) {
+        setupSlider(i, items[i]);
+    }
+}
+
 void FlaschenorgelAudioProcessorEditor::setupSlider(int sliderIndex, FlaschenorgelItem item)
 {
     
     
     sliders[sliderIndex].setSliderStyle (Slider::LinearBarVertical);
-    sliders[sliderIndex].setRange(0.0, 1000.0, 1.0);
+    sliders[sliderIndex].setRange(0.0, 1000.0 - FlaschenorgelItem::TARA, 1.0);
     sliders[sliderIndex].setTextBoxStyle (Slider::TextEntryBoxPosition::TextBoxBelow, true, 90, 30);
     sliders[sliderIndex].setPopupDisplayEnabled (false, this);
     sliders[sliderIndex].setValue(item.getPressure() - FlaschenorgelItem::TARA);
