@@ -32,6 +32,13 @@ int FlaschenorgelItem::getNoteNumber()
         std::cout << deltaNoteNumber;
         noteNumber = NOTENUMBERCENTER + deltaNoteNumber;
     }
+    
+    if (noteNumber > 127) {
+        noteNumber = 127;
+    } else if (noteNumber < 0) {
+        noteNumber = 0;
+    }
+    
     return noteNumber;
 }
 

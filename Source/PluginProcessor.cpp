@@ -149,26 +149,14 @@ void FlaschenorgelAudioProcessor::sendNote (int noteNumber, int channel, MidiBuf
     MidiMessage msg;
     uint8 vel = 127;
 
-    int lastNoteNumber = lastNoteNumbersForChannel[channel - 1];
-    
-    if (noteNumber == 0) {
-        if (lastNoteNumber > 0) {
-            msg = MidiMessage::noteOff(channel, lastNoteNumber, vel);
-            midiMessages.addEvent(msg, midiMessages.getLastEventTime());
-        }
-        
-        return;
+    msg = MidiMessage::allNotesOff(channel);
+    midiMessages.addEvent(msg, midiMessages.getLastEventTime());
+
+    if ( noteNumber > 0) {
+        msg = MidiMessage::noteOn(channel, noteNumber, vel);
+        midiMessages.addEvent(msg, midiMessages.getLastEventTime());
     }
-
-    msg = MidiMessage::noteOff(channel, noteNumber, vel);
-    midiMessages.addEvent(msg, midiMessages.getLastEventTime());
     
-    msg = MidiMessage::noteOn(channel, noteNumber, vel);
-    midiMessages.addEvent(msg, midiMessages.getLastEventTime());
-
-    lastNoteNumbersForChannel[channel - 1] = noteNumber;
-    
-    std::cout << noteNumber;
     std::cout << MidiMessage::getMidiNoteName(msg.getNoteNumber(), true, true, 1);
     std::cout << "\n";
 }
@@ -178,7 +166,7 @@ void FlaschenorgelAudioProcessor::timerCallback()
     std::vector<int> values = handler.read();
     
     for (int i = 0; i < 3; i++) {
-        if (oldValues.size() == 0 || std::abs(oldValues[i] - values[i]) >= MINFORCHANGE) {
+        if (values.size() > 0 && (oldValues.size() == 0 || std::abs(oldValues[i] - values[i]) >= MINFORCHANGE)) {
             items[i].setPressure(values[i]);
             stateChanged = true;
         }

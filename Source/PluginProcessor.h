@@ -58,7 +58,6 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
     bool stateChanged;
-    int lastNoteNumbersForChannel[3];
     
     CommunicationHandler handler;
     FlaschenorgelItem items[3];
